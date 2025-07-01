@@ -258,32 +258,30 @@ const drawHeader = async (page, pdfDoc, config, logo, issuedDate) => {
  */
 const drawBody = (page, config, data, startY) => {
     let currentY = startY;
-    const { name, college, year, course, company, project, startDate, endDate } = data;
-    const { left: marginLeft } = config.margins;
-    const contentWidth = config.contentWidth;
-    const bodyFontSize = config.fontSizes.body;
-    const bodyLineHeight = config.lineHeights.body;
+const { name, college, year, course, interncourse, project, startDate, endDate } = data;
+const { left: marginLeft } = config.margins;
+const contentWidth = config.contentWidth;
+const bodyFontSize = config.fontSizes.body;
+const bodyLineHeight = config.lineHeights.body;
 
-    // --- Title ---
-    const title = "CERTIFICATE OF COMPLETION";
-    const titleWidth = config.fonts.bold.widthOfTextAtSize(title, config.fontSizes.title);
-    currentY -= config.spacing.afterTitle;
-    page.drawText(title, {
-        x: (config.page.width - titleWidth) / 2,
-        y: currentY,
-        size: config.fontSizes.title,
-        font: config.fonts.bold,
-        color: config.colors.boldText,
-    });
-    currentY -= config.fontSizes.title;
-    currentY -= config.spacing.paragraph;
+// --- Title ---
+const title = "CERTIFICATE OF COMPLETION";
+const titleWidth = config.fonts.bold.widthOfTextAtSize(title, config.fontSizes.title);
+currentY -= config.spacing.afterTitle;
+page.drawText(title, {
+    x: (config.page.width - titleWidth) / 2,
+    y: currentY,
+    size: config.fontSizes.title,
+    font: config.fonts.bold,
+    color: config.colors.boldText,
+});
+currentY -= config.fontSizes.title;
+currentY -= config.spacing.paragraph;
 
  // ...existing code...
 
-const beforeName = `This certificate is presented to `;
-const afterName = ` from ${college}, studying ${year} ${course}, for ${
-  name.includes('she') ? 'she' : 'he'
-} has successfully completed the internship in “${company}” in our company during the period ${formatDateWithDashes(
+const beforeName = `This certificate is presented to Ms `;
+const afterName = ` from ${college} studying ${year} ${course} course, for she has successfully completed the internship in “${interncourse}” in our company during the period ${formatDateWithDashes(
   new Date(startDate)
 )} to ${formatDateWithDashes(new Date(endDate))} and has worked in the project “${project}”.`;
 
@@ -297,7 +295,7 @@ page.drawText(beforeName, {
   color: config.colors.text,
 });
 
-// Draw name (bold)
+// Draw student name (bold)
 const beforeNameWidth = config.fonts.regular.widthOfTextAtSize(beforeName, bodyFontSize);
 page.drawText(name, {
   x: marginLeft + beforeNameWidth,
@@ -307,10 +305,8 @@ page.drawText(name, {
   color: config.colors.boldText,
 });
 
-// Move to new line for afterName
-currentY -= bodyLineHeight;
-
-// Draw afterName (regular, wrapped)
+// Draw afterName (regular, wrapped, continuing on the same line)
+const nameWidth = config.fonts.bold.widthOfTextAtSize(name, bodyFontSize);
 drawWrappedText(page, afterName, {
   x: marginLeft,
   y: currentY,
@@ -319,6 +315,7 @@ drawWrappedText(page, afterName, {
   color: config.colors.text,
   maxWidth: contentWidth,
   lineHeight: bodyLineHeight,
+  initialX: marginLeft + beforeNameWidth + nameWidth, // Continue after bold name for first line
 });
 
 // ...any other body content...

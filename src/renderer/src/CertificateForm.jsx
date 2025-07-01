@@ -152,6 +152,12 @@ const CertificatePDF = () => {
       }
     });
     
+    // --- Date validation: endDate should not be before startDate ---
+    if (startDate && endDate && new Date(endDate) < new Date(startDate)) {
+      errors.endDate = "End date cannot be before start date.";
+      isValid = false;
+    }
+
     setFormErrors(errors);
     
     // Mark all fields as touched
