@@ -280,10 +280,21 @@ currentY -= config.spacing.paragraph;
 
  // ...existing code...
 
+const parseLocalDate = (dateString) => {
+  if (!dateString) return null;
+  const [year, month, day] = dateString.split('-').map(Number);
+  return new Date(year, month - 1, day); // JS months are 0-indexed
+};
+
+const formattedStartDate = startDate
+  ? parseLocalDate(startDate).toLocaleDateString('en-GB')
+  : '';
+const formattedEndDate = endDate
+  ? parseLocalDate(endDate).toLocaleDateString('en-GB')
+  : '';
+
 const beforeName = `This certificate is presented to Ms `;
-const afterName = ` from ${college} studying ${year} ${course} course, for she has successfully completed the internship in “${interncourse}” in our company during the period ${formatDateWithDashes(
-  new Date(startDate)
-)} to ${formatDateWithDashes(new Date(endDate))} and has worked in the project “${project}”.`;
+const afterName = ` from ${college} studying ${year} ${course} course, for she has successfully completed the internship in “${interncourse}” in our company during the period ${formattedStartDate} to ${formattedEndDate} and has worked in the project “${project}”.`;
 
 // Draw beforeName (regular)
 let x = marginLeft;
